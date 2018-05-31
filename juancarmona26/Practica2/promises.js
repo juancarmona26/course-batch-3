@@ -8,11 +8,6 @@ const span = document.getElementsByClassName("close")[0];
 
 const url = 'https://randomuser.me/api/';
 
-function fillTable() {
-console.log('llenar Tabla')
-
-};
-
 const getRandomUsers = () => {
     fetch(url)
     .then((response) => {
