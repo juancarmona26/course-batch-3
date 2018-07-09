@@ -1,0 +1,78 @@
+<dom-module id="show-results-view">
+    <template>
+      <style>
+        :host {
+          display: block;
+        }
+        
+        paper-button.blue {
+                background-color: var(--paper-green-500);
+                color: white;
+            }
+      </style>    
+  
+  <h2>Hello Listo [[name]]!</h2>
+  <ul>
+      <template is="dom-repeat" items="[[polls]]" as="poll" index-as="indexA">
+          <paper-input id$="input-[[indexA]]"
+          label="Introduce tu nombre"
+          value="{{poll.question}}">
+          </paper-input>
+          <template is="dom-repeat" items="[[poll.options]]" as="optionObj" index-as="indexB">          
+            <li>
+
+                <p>{{optionObj.option}}  <paper-button class="green" on-click="callbackButton">    Vote! {{optionObj.vote}}</paper-button> </p>
+
+            </li>
+
+            
+
+            
+          </template>
+      </template>
+  </ul>
+  </template>    
+  
+    <script>
+      /**
+       * @customElement
+       * @polymer
+       */
+      class ShowResultsView extends Polymer.Element {
+        static get is() { return 'show-results-view'; }
+        static get properties() {
+          return {
+              name: {
+                type: String,
+                value: 'World'
+              },
+              polls: {
+                type:Array,
+                value:[{
+                  question:'question to do',
+                  options:[{option:'option to choose', vote:0},
+                  {option:'option to choose 2', vote:1}]
+                }]                
+              }
+          
+          }
+        }
+  
+        addQuestion(event) {
+            console.log("agregar question");
+            
+            this.shadowRoot.appendChild(document.createElement('paper-input'));
+        }
+  
+       
+        handleResponse(response){
+          console.log(response);
+  
+        }
+  
+      }
+  
+      window.customElements.define(ShowResultsView.is, ShowResultsView);
+    </script>
+  </dom-module>
+  

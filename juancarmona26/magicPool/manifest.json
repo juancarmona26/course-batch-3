@@ -1,0 +1,7 @@
+{
+  "name": "magicPool",
+  "short_name": "magicPool",
+  "description": "aplicación magic pools",
+  "start_url": "/",
+  "display": "standalone"
+}

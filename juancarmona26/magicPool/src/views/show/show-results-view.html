@@ -1,0 +1,72 @@
+<dom-module id="show-results-view">
+    <template>
+      <style>
+        :host {
+          display: block;
+        }
+        
+        paper-button.green {
+                background-color: var(--paper-green-500);
+                color: blue;
+            }
+      </style>    
+  
+  <h2>Hello kha verga [[name]]!</h2>
+  <ul>
+      <template is="dom-repeat" items="[[options]]" as="lol" index-as="indexA">
+          <template is="dom-repeat" items="[[lol.other]]" as="boo" index-as="indexB">
+              <li>
+                  <paper-input id$="input-[[indexA]]"
+                               label="Introduce tu nombre"
+                               value="{{lol.name}} {{boo.last}}">
+                  </paper-input>
+                  <paper-button class="green" on-click="callbackButton">Suscribe !</paper-button>
+              </li>
+          </template>
+      </template>
+  </ul>
+</template>
+  
+    </template>
+  
+
+
+  
+    
+  
+    <script>
+      /**
+       * @customElement
+       * @polymer
+       */
+      class ShowResultsView extends Polymer.Element {
+        static get is() { return 'show-results-view'; }
+        static get properties() {
+          return {
+              name: {
+                type: String,
+                value: 'World'
+              },
+              options: []
+          
+            }
+        }
+  
+        addQuestion(event) {
+            console.log("agregar question");
+            
+            this.shadowRoot.appendChild(document.createElement('paper-input'));
+        }
+  
+       
+        handleResponse(response){
+          console.log(response);
+  
+        }
+  
+      }
+  
+      window.customElements.define(ShowResultsView.is, ShowResultsView);
+    </script>
+  </dom-module>
+  

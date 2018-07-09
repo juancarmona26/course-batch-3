@@ -1,0 +1,90 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="home-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-button.green {
+          background-color: var(--paper-green-500);
+          color: white;
+      }
+    </style>    
+
+
+    <paper-input id="question" label="Pregunta">
+        <div slot="suffix">Pregunta</div>
+    </paper-input>
+    
+    <paper-button class="green" on-click="addOptionInput">Add Option</paper-button>
+    
+    <div id="options">
+        <paper-input label="Option"></paper-input>
+        <paper-input label="Option"></paper-input>    
+    </div>
+    
+    <paper-button class="green" on-click="sendPoll">Send Poll</paper-button>
+
+    <iron-ajax id="requestapi"                              
+          handle-as="json"
+          content-type="application/json"
+          on-response="handleResponse"
+          debounce-duration="300">
+    </iron-ajax>
+
+  </template>  
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class HomeView extends Polymer.Element {      
+      
+      static get is() { return 'home-view'; }
+
+      addOptionInput(event) {
+          console.log("agregar question");
+          const buttonElement = document.createElement('paper-input');
+          buttonElement.label = 'Option';
+
+          this.$.options.appendChild(buttonElement);
+      }
+
+      sendPoll(event){
+        let options = [];
+        const optionNodes = this.$.options.childNodes;
+        const question = this.$.question.value;
+        const ajax = this.$.requestapi;
+        ajax.url = 'https://poll-api-rest.herokuapp.com/poll';
+        ajax.method = "POST";
+        
+        for(const optionNode of optionNodes ){
+          
+          if (optionNode.nodeName !== '#text'  ) {
+            
+            options.push({option:optionNode.value, votes: 0});
+          }
+        }
+
+        const optionObject = {question: question,  options: options};
+        ajax.body = optionObject;
+        ajax.generateRequest();        
+
+      }
+
+      handleResponse(response){        
+
+      }
+
+    }
+
+    window.customElements.define(HomeView.is, HomeView);
+  </script>
+</dom-module>
