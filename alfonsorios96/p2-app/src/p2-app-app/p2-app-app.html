@@ -2,6 +2,8 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../one-component/one-component.html">
 <link rel="import" href="../two-component/two-component.html">
@@ -18,18 +20,23 @@
                    pattern="/:page"
                    data="{{data}}"></app-route>
 
-        <a href="home">HOME</a>
-        <a href="about">ABOUT</a>
+        <iron-ajax
+                id="apiRest"
+                headers='{"Content-Type": "application/json"}'
+                handle-as="json"
+                on-response="_handleResponse"
+                debounce-duration="300"></iron-ajax>
+
+        <paper-button on-click="goToView" data-view="home">HOME</paper-button>
+        <paper-button on-click="goToView" data-view="polls">POLLS</paper-button>
 
         <iron-pages
                 selected="{{data.page}}"
                 attr-for-selected="view"
                 fallback-selection="home"
-                on-login-request="login"
-                on-reset-data="reset"
                 role="main">
-            <one-component view="home" response="[[loginOther]]"></one-component>
-            <two-component view="about" request="[[loginData]]"></two-component>
+            <one-component view="home" on-new-poll="createPoll"></one-component>
+            <two-component view="polls" polls="[[polls]]" on-vote-poll="vote"></two-component>
         </iron-pages>
     </template>
 
@@ -43,28 +50,46 @@
           return 'p2-app-app';
         }
 
+        connectedCallback() {
+          super.connectedCallback();
+          this.getPollsList();
+        }
+
         static get properties() {
           return {
-            loginData: {
-              type: Object,
-              value: {}
-            },
-            loginOther: {
-              type: Object,
-              value: {}
+            polls: {
+              type: Array,
+              value: []
             }
           };
         }
 
-        login(event) {
-          const payload = event.detail;
-          this.set('loginData', payload);
-          this.set('data.page', 'about');
+        goToView(event) {
+          this.set('data.page', event.currentTarget.getAttribute('data-view'));
         }
 
-        reset() {
-          this.set('loginOther', null);
-          this.set('data.page', 'home');
+        createPoll(event) {
+          this.$.apiRest.url = 'http://localhost:5000/poll';
+          this.$.apiRest.method = 'POST';
+          this.$.apiRest.body = JSON.stringify(event.detail);
+          this.$.apiRest.generateRequest();
+        }
+
+        getPollsList() {
+          this.$.apiRest.url = 'http://localhost:5000/polls';
+          this.$.apiRest.method = 'GET';
+          this.$.apiRest.generateRequest();
+        }
+
+        vote(event) {
+          this.$.apiRest.url = 'http://localhost:5000/vote';
+          this.$.apiRest.method = 'POST';
+          this.$.apiRest.body = JSON.stringify(event.detail);
+          this.$.apiRest.generateRequest();
+        }
+
+        _handleResponse() {
+          this.set('polls', this.$.apiRest.lastResponse);
         }
       }
 

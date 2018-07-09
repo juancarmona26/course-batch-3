@@ -1,0 +1,83 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="home-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <paper-input id="questionValue" label="Ingresa tu pregunta"></paper-input>
+        <paper-input id="masterOption" label="ingresa una opcion de respuesta"></paper-input>
+        <paper-button on-click="_addOption">agregar Opcion</paper-button>
+        <paper-button on-click="_saveQuestion">Guardar</paper-button>
+
+        <ul id="myOptionsList">
+        </ul>
+    </template>
+
+    <script>
+      /**
+       * @customElement
+       * @polymer
+       */
+      class HomeView extends Polymer.Element {
+        static get is() { return 'home-view'; }
+
+
+        static get properties() {
+          return {
+            prop1: {
+              type: String,
+              value: 'recreation-poll-app'
+            },
+            question:{
+              type:String,
+              value: ''
+            },
+            allOptions:{
+              type: Array,
+              value: []
+            },
+            flag:{
+              type: Boolean,
+              value: false
+            },
+            poll:{
+              type: Object,
+              value:{}
+            }
+          };
+        }
+
+        _addOption(){
+            const option = this.$.masterOption.value;
+            this.allOptions.push({option: option, vote: 0});
+            const li = document.createElement('li');
+            li.textContent = option;
+            this.$.myOptionsList.appendChild(li);
+        }
+
+        _saveQuestion(){
+            this.poll.question = this.$.questionValue.value;
+            this.poll.options = this.allOptions;
+            console.log(this.poll);
+
+
+            this.dispatchEvent(new CustomEvent('save-question',{
+              bubbles: true,
+              composed: true,
+              detail: this.poll
+            }))
+        }
+
+
+
+      }
+
+      window.customElements.define(HomeView.is, HomeView);
+    </script>
+</dom-module>

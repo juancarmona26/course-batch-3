@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html" xmlns:link="http://www.w3.org/1999/html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tab.html">
+
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+<dom-module id="magic-exam">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <paper-tabs selected="0" scrollable id="mistabs">
+            <template is="dom-repeat" items="[[insumo]]">
+                <paper-tab id="tabsita" on-click="mostrar">[[item.name]]</paper-tab>
+            </template>
+        </paper-tabs>
+
+        <h1 id="contenido">Valor por defecto</h1>
+
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class MagicExam extends Polymer.Element {
+            static get is() { return 'magic-exam'; }
+            static get properties() {
+                return {
+                    prop1: {
+                        type: String,
+                        value: 'magic-exam'
+                    },
+                    insumo:{
+                        type: Array,
+                        value: [ {
+                            name: 'Juan de Dios',
+                            other: 'contenido yei'
+                        },
+                            {
+                                name: 'Emanuel',
+                                other: 'contenido yei'
+                            },
+                            {
+                                name: 'Karla',
+                                other: 'contenido yei'
+                            },
+                            {
+                                name: 'Chris',
+                                other: 'contenido yei'
+                            },
+                            {
+                                name: 'Alfonso',
+                                other: 'contenido yei'
+                            },
+                            {
+                                name: 'Salvador',
+                                other: 'contenido yei'
+                            } ],
+
+
+                    }
+                };
+            }
+
+            mostrar(event){
+                const persona = event.model.item;
+                this.$.contenido.innerHTML = 'hola' + persona.name;
+            }
+
+        }
+
+        window.customElements.define(MagicExam.is, MagicExam);
+    </script>
+</dom-module>

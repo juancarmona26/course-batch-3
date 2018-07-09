@@ -1,0 +1,158 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+
+<dom-module id="poll-view">
+    <template>
+        <custom-style>
+            <style is="custom-style">
+                paper-checkbox.red {
+                    --paper-checkbox-size: 2em;
+                    --paper-checkbox-checked-color: var(--paper-red-500);
+                    --paper-checkbox-checked-ink-color: var(--paper-red-500);
+                    --paper-checkbox-unchecked-color: var(--paper-red-900);
+                    --paper-checkbox-unchecked-ink-color: var(--paper-red-900);
+                    --paper-checkbox-label-color: var(--paper-red-700);
+                    --paper-checkbox-vertical-align: top;
+                }
+
+                paper-checkbox.green {
+                    align-self: center;
+                    border: 1px solid var(--paper-green-200);
+                    padding: 8px 16px;
+
+                    --paper-checkbox-checked-color: var(--paper-green-500);
+                    --paper-checkbox-checked-ink-color: var(--paper-green-500);
+                    --paper-checkbox-unchecked-color: var(--paper-green-900);
+                    --paper-checkbox-unchecked-ink-color: var(--paper-green-900);
+                    --paper-checkbox-label-color: var(--paper-green-700);
+                    --paper-checkbox-label-spacing: 0;
+                    --paper-checkbox-margin: 8px 16px 8px 0;
+                    --paper-checkbox-vertical-align: top;
+                }
+
+                paper-checkbox.blue {
+                    --paper-checkbox-checked-color: var(--paper-blue-500);
+                    --paper-checkbox-checked-ink-color: var(--paper-blue-500);
+                    --paper-checkbox-unchecked-color: var(--paper-blue-900);
+                    --paper-checkbox-unchecked-ink-color: var(--paper-blue-900);
+                    --paper-checkbox-label-color: var(--paper-blue-700);
+                    --paper-checkbox-label-checked-color: var(--paper-blue-900);
+                }
+
+                paper-checkbox .title {
+                    display: block;
+                    font-size: 1.2em;
+                }
+
+                paper-checkbox .subtitle {
+                    display: block;
+                    font-size: 0.9em;
+                    max-width: 150px;
+                }
+            </style>
+        </custom-style>
+        <iron-ajax
+                auto
+                url="https://poll-api-rest.herokuapp.com/polls"
+                last-response="{{data}}"
+                content-type="application/json"
+                handle-as="json">
+        </iron-ajax>
+        <template is="dom-repeat" items="[[data]]">
+            <div role="listbox">
+                <template is="dom-if" if="[[asQuestion(item)]]">
+                    <div name="questionContainer">
+                        <paper-item on-click="showOptions">[[item.question]]</paper-item>
+                        <div hidden="true" id="[[item.id]]">
+                            <template is="dom-repeat" items="[[item.options]]" as="option">
+                                <paper-checkbox on-change="addVote" class="styled green">
+                                    [[option.option]]
+                                    <span class="subtitle">
+                                        Votes: [[option.votes]]
+                                    </span>
+                                </paper-checkbox>
+                            </template>
+                            <google-chart
+                                    type='bar'
+                                    options='{"title": "votes... votes and votes"}'
+                                    data='[[builData(item.options)]]'>
+                            </google-chart>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <template is="dom-if" if="[[isVote]]">
+            <iron-ajax
+                       auto
+                       method="post"
+                       url="[[url]]"
+                       body="[[body]]"
+                       content-type="application/json"
+                       handle-as="json"
+                       on-response="setVoteFalse">
+            </iron-ajax>
+        </template>
+    </template>
+    <script>
+
+        class PollView extends Polymer.Element {
+            static get is() { return 'poll-view'; }
+            static get properties() {
+                return {
+                    url:{
+                        type: String,
+                        value: 'https://poll-api-rest.herokuapp.com/vote/'
+                    },
+                    body: {
+                        type: Object
+                    },
+                    isVote:{
+                        type: Boolean,
+                        value: false
+                    }
+                };
+            }
+
+            asQuestion(poll){
+                return poll.hasOwnProperty('question');
+            }
+
+            showOptions(event){
+                const optionsContainer = event.target.nextElementSibling;
+                optionsContainer.hidden = !optionsContainer.hidden;
+            }
+
+            addVote(event){
+                if(event.target.checked){
+                    this.set('body',{
+                        "pollId": event.target.parentElement.getAttribute('id'),
+                        "option": event.model.itemsIndex
+                    });
+                    this.set('isVote',true);
+                }
+            }
+
+            setVoteFalse(){
+                this.set('isVote', false);
+            }
+
+            builData(options){
+                const data = new Array( ['Options', 'Votes']);
+                for(const option of options){
+                    const element = new Array(option.option, option.votes);
+                    data.push(element);
+                }
+                return data;
+            }
+        }
+
+
+
+        window.customElements.define(PollView.is, PollView);
+    </script>
+
+</dom-module>

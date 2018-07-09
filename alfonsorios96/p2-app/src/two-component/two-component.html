@@ -1,5 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
 
 <dom-module id="two-component">
     <template>
@@ -8,14 +8,22 @@
                 display: block;
             }
         </style>
-        <h2>This is about</h2>
+        <h2>Polls list</h2>
 
         <ul>
-            <li>Username: [[request.user]]</li>
-            <li>Password: [[request.pass]]</li>
+            <template is="dom-repeat" items="[[polls]]" as="poll">
+                <li>[[poll.question]]</li>
+                <ul>
+                    <template is="dom-repeat" items="[[poll.options]]" as="option" index-as="indexOption">
+                        <li>[[option.option]] : [[option.votes]]</li>
+                        <paper-button on-click="vote">Vote !</paper-button>
+                    </template>
+                </ul>
+                <highcharts-chart type="pie"
+                                  label="Work" title="hola" subtitle="hola"
+                                  data='[{"name":"Mary", "y": 36.3},{"name":"Davis", "y":60},{"name":"John", "y":13.6}]'></highcharts-chart>
+            </template>
         </ul>
-
-        <paper-button on-click="resetData">Reset</paper-button>
     </template>
 
     <script>
@@ -24,21 +32,27 @@
        * @polymer
        */
       class TwoComponent extends Polymer.Element {
-        static get is() { return 'two-component'; }
+        static get is() {
+          return 'two-component';
+        }
+
         static get properties() {
           return {
-            request: {
-              type: Object,
-              value: {}
+            polls: {
+              type: Array,
+              value: []
             }
           };
         }
 
-        resetData() {
-          this.set('request', {});
-          this.dispatchEvent(new CustomEvent('reset-data', {
+        vote(event) {
+          this.dispatchEvent(new CustomEvent('vote-poll', {
             bubbles: true,
-            composed: true
+            composed: true,
+            detail: {
+              pollId: event.model.parentModel.poll.id,
+              option: event.model.indexOption
+            }
           }));
         }
       }

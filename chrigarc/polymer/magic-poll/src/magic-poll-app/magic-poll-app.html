@@ -1,0 +1,60 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../home-view/home-view.html">
+<link rel="import" href="../poll-view/poll-view.html">
+
+<dom-module id="magic-poll-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}"
+               pattern="/:page"
+               tail="{{tail}}"
+               data="{{data}}"></app-route>
+
+    <h1>Practica -  Crear un front para un servicio de poll</h1>
+
+    <a href="/home">Inicio</a>
+
+    <div id="app">
+      <iron-pages
+              selected="{{data.page}}"
+              attr-for-selected="view"
+              fallback-selection="home"
+              role="main">
+        <home-view view="home" on-polls-changed="updatePolls"></home-view>
+        <poll-view id="poll-view" view="poll" selected="{{tail.path}}" polls="[[polls]]"></poll-view>
+      </iron-pages>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MagicPollApp extends Polymer.Element {
+      static get is() { return 'magic-poll-app'; }
+      static get properties() {
+        return {
+          polls: {
+              type: Object,
+              value: {}
+          }
+        };
+      }
+
+      updatePolls(event){
+          this.set('polls', event.detail.value);
+      }
+    }
+
+    window.customElements.define(MagicPollApp.is, MagicPollApp);
+  </script>
+</dom-module>

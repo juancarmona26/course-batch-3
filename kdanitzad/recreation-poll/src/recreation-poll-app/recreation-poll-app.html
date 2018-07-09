@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./views/home-view.html">
+<link rel="import" href="./views/poll-view.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<dom-module id="recreation-poll-app">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <app-location route="{{route}}"></app-location>
+        <app-route
+                route="{{route}}"
+                data="{{data}}"
+                pattern="/:page">
+        </app-route>
+
+        <a href="home">HOME</a>
+        <a href="poll">POLL</a>
+
+        <iron-pages
+                selected="{{data.page}}"
+                attr-for-selected="view"
+                fallback-selection="home"
+                role="main">
+            <home-view view="home" on-save-question="pullQuestion"></home-view>
+            <poll-view view="poll" data="[[poll]]" on-voting-poll="voteOption"></poll-view>
+        </iron-pages>
+
+
+        <iron-ajax
+                id="myAjax"
+                headers='{"Content-type":"application/json"}'
+                handle-as="json"
+                on-response="responseManagement">
+        </iron-ajax>
+
+
+    </template>
+
+    <script>
+      /**
+       * @customElement
+       * @polymer
+       */
+      class RecreationPollApp extends Polymer.Element {
+        static get is() {
+          return 'recreation-poll-app';
+        }
+
+        static get properties() {
+          return {
+            poll: {
+              type: Object,
+              value: {}
+            }
+          };
+        }
+
+        pullQuestion(event) {
+          this.$.myAjax.url = 'http://localhost:5000/poll';
+          this.$.myAjax.method = 'POST';
+          this.$.myAjax.body = JSON.stringify(event.detail);
+          this.$.myAjax.generateRequest();
+        }
+
+        voteOption(event) {
+          this.$.myAjax.url = 'http://localhost:5000/vote';
+          this.$.myAjax.method = 'POST';
+          this.$.myAjax.body = JSON.stringify(event.detail);
+          this.$.myAjax.generateRequest();
+        }
+
+        getQuestions() {
+          this.$.myAjax.url = 'http://localhost:5000/polls';
+          this.$.myAjax.method = 'GET';
+          this.$.myAjax.generateRequest();
+        }
+
+        responseManagement() {
+          this.poll = this.$.myAjax.lastResponse;
+        }
+      }
+
+      window.customElements.define(RecreationPollApp.is, RecreationPollApp);
+    </script>
+</dom-module>

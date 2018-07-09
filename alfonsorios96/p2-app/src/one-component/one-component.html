@@ -10,12 +10,18 @@
             }
         </style>
 
-        <h2>Login</h2>
+        <h2>Create new poll</h2>
 
-        <paper-input label="Username" id="user"></paper-input>
-        <paper-input label="Password" id="pass"></paper-input>
+        <paper-input label="Question" id="question"></paper-input>
 
-        <paper-button on-click="login">LogIn</paper-button>
+        <paper-button on-click="_createOption">Add new option</paper-button>
+
+        <div class="options" id="options">
+            <paper-input label="Option"></paper-input>
+            <paper-input label="Option"></paper-input>
+        </div>
+
+        <paper-button on-click="createPoll">Create poll</paper-button>
 
     </template>
 
@@ -30,32 +36,37 @@
         }
 
         static get properties() {
-          return {
-            response: {
-              type: Object,
-              value: {},
-              observer: '_changeResponse'
-            }
-          };
+          return {};
         }
 
-        login() {
-          const username = this.$.user.value;
-          const password = this.$.pass.value;
+        createPoll() {
+          const poll = {
+            question: this.$.question.value,
+            options: []
+          };
 
-          this.dispatchEvent(new CustomEvent('login-request', {
+          const options = this.$.options.childNodes;
+
+          for (const option of options) {
+            if (option.value !== undefined) {
+              poll.options.push({
+                option: option.value,
+                votes: 0
+              });
+            }
+          }
+
+          this.dispatchEvent(new CustomEvent('new-poll', {
             bubbles: true,
             composed: true,
-            detail: {
-              user: username,
-              pass: password
-            }
+            detail: poll
           }));
         }
 
-        _changeResponse() {
-          this.$.user.value = '';
-          this.$.pass.value = '';
+        _createOption() {
+          const input = document.createElement('paper-input');
+          input.label = 'Option';
+          this.$.options.appendChild(input);
         }
       }
 

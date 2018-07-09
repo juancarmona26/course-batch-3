@@ -1,0 +1,54 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../views/home-view.html">
+<link rel="import" href="../views/poll-view.html">
+
+
+<dom-module id="magic-poll-app-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}"
+               pattern="/:page"
+               data="{{data}}"></app-route>
+
+    <a href="[[rootPath]]crear">Crear encuesta</a>
+    <a href="[[rootPath]]contestar">Contestar encuesta</a>
+
+    <iron-pages
+            selected="{{data.page}}"
+            attr-for-selected="view"
+            fallback-selection="home"
+            role="main">
+           <home-view view="home"></home-view>
+           <poll-view view="contestar"></poll-view>
+    </iron-pages>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MagicPollAppApp extends Polymer.Element {
+      static get is() { return 'magic-poll-app-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'magic-poll-app-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(MagicPollAppApp.is, MagicPollAppApp);
+  </script>
+</dom-module>

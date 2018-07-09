@@ -1,0 +1,7 @@
+{
+  "name": "magictabskarla",
+  "short_name": "magictabskarla",
+  "description": "el examen en polymer 2",
+  "start_url": "/",
+  "display": "standalone"
+}

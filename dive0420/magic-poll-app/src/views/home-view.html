@@ -1,0 +1,90 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="home-view">
+    <template>
+        <paper-input always-float-label label="Poll Name" id="poll-name"></paper-input>
+        <br>
+        <div id="options">
+            <paper-input always-float-label label="option" id="option-1"></paper-input>
+        </div>
+
+        <paper-button raised class="indigo" on-click="addInputOption">Add Option</paper-button>
+        <paper-button raised class="indigo" on-click="save">Crear</paper-button>
+
+        <template is="dom-if" if="[[isReadyToSave]]">
+            <iron-ajax
+                    auto
+                    method="post"
+                    url="https://poll-api-rest.herokuapp.com/poll"
+                    body="[[request]]"
+                    content-type="application/json"
+                    handle-as="json"
+                    on-response="handleResponse">
+            </iron-ajax>
+        </template>
+    </template>
+    <script>
+
+        class HomeView extends Polymer.Element {
+            static get is() { return 'home-view'; }
+            static get properties() {
+                return {
+                    request: {
+                        type: Object
+                    },
+                    isReadyToSave: {
+                        type: Boolean,
+                        value: false
+                    }
+                };
+            }
+            addInputOption(event){
+                const options = this.shadowRoot.querySelector('#options');
+                const paperInput = document.createElement('paper-input');
+                paperInput.setAttribute('label', 'option');
+                paperInput.setAttribute('always-float-label','');
+                const id = options.childElementCount + 1;
+                paperInput.setAttribute('id','option-' + id);
+                options.appendChild(paperInput);
+
+            }
+
+            save(){
+                const pollName = this.shadowRoot.querySelector('#poll-name');
+                const options = this.shadowRoot.querySelector('#options');
+                if(pollName.value != ''){
+                    const arrayOptions = this.buildOptions(options.childNodes);
+                    if(arrayOptions.length > 0) {
+                        this.set('request', {"question": pollName.value, "options": arrayOptions});
+                        this.set('isReadyToSave', true);
+                    }
+                }
+
+            }
+
+            handleResponse(){
+                window.location.assign("/crear");
+            }
+
+            buildOptions(options){
+                const result = new Array();
+                for(const option of options){
+                    if(option.nodeName != '#text'){
+                        if(option.value != ''){
+                            result.push({"option": option.value, "votes":0});
+                        }
+                    }
+                }
+                return result;
+            }
+
+        }
+
+        window.customElements.define(HomeView.is, HomeView);
+    </script>
+
+</dom-module>

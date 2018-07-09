@@ -1,0 +1,7 @@
+{
+  "name": "magic-poll-app",
+  "short_name": "magic-poll-app",
+  "description": "poncho&#39;s homework",
+  "start_url": "/",
+  "display": "standalone"
+}

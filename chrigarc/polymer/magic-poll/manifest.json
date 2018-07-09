@@ -1,0 +1,6 @@
+{
+  "name": "magic-poll",
+  "short_name": "magic-poll",
+  "start_url": "/",
+  "display": "standalone"
+}

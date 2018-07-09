@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="home-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <iron-ajax id="request"
+                auto
+                url="https://poll-api-rest.herokuapp.com/polls", params='',
+                handle-as="json"
+                   loading="{{cargando}}"
+                last-response="{{polls}}"></iron-ajax>
+
+        <iron-ajax id="request-save"
+                   method="post"
+                   content-type="application/json"
+                   url="https://poll-api-rest.herokuapp.com/poll",
+                   body='{"question":"hola","options":[{"option":"op1","votes":0}]}'
+                   handle-as="json"
+                   loading="{{cargando}}"
+                   last-response="{{polls}}"></iron-ajax>
+
+        <h2>Home View [[prop1]]!</h2>
+        <div id="area-lista">
+            <div hidden$="[[!cargando]]">Estamos cargando datos...</div>
+            <ul id="lista de encuestas">
+                <dom-repeat items="[[polls]]">
+                    <template>
+                        <li><a href="poll/[[index]]">[[item.question]]</a></li>
+                    </template>
+                </dom-repeat>
+            </ul>
+            <paper-button on-click="refresh">Refrescar</paper-button>
+        </div>
+        <div id="area-registro">
+            <paper-input label="Nueva pregunta" id="newpoll"></paper-input>
+            <paper-input name="item-option" label="Primer opcion" id="newoption"></paper-input>
+            <dom-repeat items="[[options]]">
+                <template>
+                    <paper-input name="item-option" label="Nueva opcion" id="newoption-[[index]]"></paper-input>
+                </template>
+            </dom-repeat>
+            <paper-button on-click="add">Nueva opcion</paper-button>
+            <paper-button on-click="register">Guardar</paper-button>
+        </div>
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class HomeView extends Polymer.Element {
+            static get is() { return 'home-view'; }
+            static get properties() {
+                return {
+                    polls: {
+                        type: Object,
+                        value: [],
+                        notify: true
+                    },
+                    question: {
+                        type: String,
+                        value: ""
+                    },
+                    options: {
+                        type: Array,
+                        value: []
+                    }
+                };
+            }
+
+            refresh(){
+                const request = this.$.request.generateRequest();
+            }
+
+            register(){
+                this.question = this.$.newpoll.value;
+                const inputOptions = this.shadowRoot.querySelectorAll('paper-input[name="item-option"]');
+                const options = [];
+                for(const option of inputOptions){
+                    if(option.value !== ''){
+                        options.push({
+                            option: option.value,
+                            votes: 0
+                        });
+                    }
+                }
+                const params = JSON.stringify({
+                    question: this.question,
+                    options: options
+                });
+                this.$['request-save'].body = params;
+                const request = this.$['request-save'].generateRequest();
+            }
+
+            add(){
+                const newArray = this.options;
+                newArray.push('');
+                this.options = [];
+                this.set('options',newArray);
+            }
+
+        }
+
+        window.customElements.define(HomeView.is, HomeView);
+    </script>
+</dom-module>

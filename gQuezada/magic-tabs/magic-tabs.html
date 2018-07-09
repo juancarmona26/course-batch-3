@@ -1,0 +1,206 @@
+<template>
+    <style>
+        #container{
+            width: 100%;
+            font-family: 'Helvetica';
+        }
+        #tabs-content{
+            display: flex;
+            text-align: center;
+        }
+        
+        .navigation {
+            display:inline-block;
+            float: none;
+            vertical-align: middle;
+            width: 30px;
+            cursor: pointer;
+        }
+
+        #tabs {
+            display:inline-block;
+            float: none;
+            vertical-align: middle;
+            width: 100%;
+        }
+
+        #tabs > div {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+            min-width: 20%;
+            cursor: pointer;
+            box-sizing: border-box;
+            color: #AAA;
+            padding: 5px 0px;
+            border: 1px solid inherit;
+        }
+        #tabs > div.activeTab{
+            border: 1px solid black;
+            border-bottom: 0px;
+            -webkit-border-radius: 5px 5px 0 0;
+            border-radius: 5px 5px 0 0;
+            color: black;
+        }
+        #content{
+             width: 100%;
+             min-height: 30%;
+             border: 1px solid black;
+        }
+        #content > div{
+            margin: 1%;
+        }
+        .hiddenElement{
+            visibility: hidden;
+        }
+     </style>
+     <div id="container">
+         <div id="tabs-content">
+             <div class="navigation prev">&lt;</div>
+             <div id="tabs">
+
+             </div>
+             <div class="navigation next">&gt;</div>
+         </div>
+         <div id="content">
+             <div></div>
+         </div>
+     </div>
+ </template>
+ <script>
+     'use strict';
+     ((customElements, document) => {
+         class MagicTabs extends HTMLElement {
+ 
+             constructor() {
+                 super();
+                 
+                 this.prev = this.prev.bind(this);
+                 this.next = this.next.bind(this);
+                 this.configTabs = this.configTabs.bind(this);
+                 this.displayArrows = this.displayArrows.bind(this);
+                 this.displayTabContent = this.displayTabContent.bind(this);
+                 
+                 this.factorSlide = null;
+                 this.tabSelected = 0;
+                 this.currentTab = 0;
+
+                 this.elements = []; 
+ 
+                 let tmpl = document.currentScript.ownerDocument.querySelector('template');
+ 
+                 let shadowRoot = this.attachShadow({
+                     mode: 'open'
+                 });
+ 
+                 shadowRoot.appendChild(tmpl.content.cloneNode(true));
+             }
+             
+            connectedCallback(){
+                this.data = JSON.parse(this.getAttribute('tabs'));
+
+                this.shadowRoot.querySelector('#tabs-content > .prev').addEventListener('click', this.prev);
+                this.shadowRoot.querySelector('#tabs-content > .next').addEventListener('click', this.next);
+
+                this.configTabs(0, 0);
+                this.displayArrows();
+            }
+            
+            attributeChangedCallback(name, oldValue, newValue) {  
+                if (name === 'tabs') {            
+                    this.data = JSON.parse(newValue);
+                    this.configTabs(0,0);
+                    this.displayArrows();
+                }
+            }
+ 
+            get tabs() {
+                return this.getAttribute('tabs');
+            }
+
+            set tabs(value) {
+                this.setAttribute('tabs', value);
+            }
+             
+            configTabs(){
+                this.shadowRoot.querySelector('#tabs').innerHTML = "";
+                if(this.data.length < 5){
+                    this.factorSlide = 100/this.data.length;
+                    this.factorSlide = this.factorSlide.toFixed(1);
+                    let tabIndex = 0;
+                    for(const item of this.data){
+                        this.elements.push(document.createElement('div'));
+                        this.elements[this.elements.length-1].innerHTML = item.tab;
+                        this.elements[this.elements.length-1].setAttribute('data-tab', tabIndex)
+                        this.elements[this.elements.length-1].addEventListener('click',this.displayTabContent);
+                        this.shadowRoot.querySelector('#tabs').appendChild(this.elements[this.elements.length-1]);
+                        tabIndex++;
+                    }
+                }
+                else{
+                    this.factorSlide = 20;
+
+                    for(let i=0; i<5; i++){
+                        this.elements.push(document.createElement('div'));
+                        this.elements[this.elements.length-1].innerHTML = this.data[this.currentTab+i].tab;
+                        this.elements[this.elements.length-1].setAttribute('data-tab', i)
+                        this.elements[this.elements.length-1].addEventListener('click',this.displayTabContent);
+                        this.shadowRoot.querySelector('#tabs').appendChild(this.elements[this.elements.length-1]);
+                    }
+                }
+                
+                if(this.tabSelected-this.currentTab < 5 && this.tabSelected-this.currentTab >= 0) {
+                    const selector = this.tabSelected-this.currentTab+1; 
+                    this.shadowRoot.querySelector('#tabs > div:nth-child('+selector+')').classList.add('activeTab');
+                }
+                this.shadowRoot.querySelector('#content > div').innerHTML = this.data[this.tabSelected].content; 
+            }
+             
+            displayTabContent(event){
+                try {
+                    this.shadowRoot.querySelector('.activeTab').classList.remove('activeTab');
+                }
+                catch(e) {
+                    console.log('No existía la pestaña seleccionada dentro del rango visible');
+                }
+                
+                event.target.classList.add('activeTab');
+                this.tabSelected = this.currentTab + parseInt(this.shadowRoot.querySelector('.activeTab').getAttribute('data-tab'));
+                this.shadowRoot.querySelector('#content > div').innerHTML = this.data[this.tabSelected].content; 
+            }
+             
+            prev(){
+                if(this.currentTab > 0){
+                    this.currentTab--;
+                    this.configTabs();
+                    this.displayArrows();
+                }
+            }
+
+            next(){
+                this.currentTab++;
+                this.configTabs();
+                this.displayArrows();
+            }
+
+            repaintTabs() {
+                
+            }
+             
+             displayArrows(){
+                 if(this.currentTab === 0){
+                     this.shadowRoot.querySelector('.prev').classList.add('hiddenElement');
+                 }else{
+                     this.shadowRoot.querySelector('.prev').classList.remove('hiddenElement');
+                 }
+                 
+                 if(this.currentTab === this.data.length-5 || this.data.length < 5 ){
+                     this.shadowRoot.querySelector('.next').classList.add('hiddenElement');
+                 }else{
+                     this.shadowRoot.querySelector('.next').classList.remove('hiddenElement');
+                 }
+             }
+         }
+         customElements.define('magic-tabs', MagicTabs);
+     })(window.customElements, document);
+ </script>

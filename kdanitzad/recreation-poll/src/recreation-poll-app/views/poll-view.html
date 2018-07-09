@@ -1,0 +1,61 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="poll-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <h1>[[title]]</h1>
+
+
+        <template is="dom-repeat" items="[[data]]" as="question">
+            <iron-label>[[question.question]]</iron-label>
+            <template is="dom-repeat" items="[[question.options]]" as="option" index-as="i">
+                <paper-button on-click="addVote">[[option.option]]</paper-button>
+            </template>
+        </template>
+
+    </template>
+
+    <script>
+      /**
+       * @customElement
+       * @polymer
+       */
+      class PollView extends Polymer.Element {
+        static get is() {
+          return 'poll-view';
+        }
+
+        addVote(event) {
+          this.dispatchEvent(new CustomEvent('voting-poll', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              pollId: event.model.parentModel.question.id,
+              option: event.model.option.i
+            }
+
+          }))
+        }
+
+        static get properties() {
+          return {
+            data: {
+              type: Object,
+              value: {}
+            },
+            title: {
+              type: String,
+              value: 'A votar!'
+            }
+          };
+        }
+      }
+
+      window.customElements.define(PollView.is, PollView);
+    </script>
+</dom-module>

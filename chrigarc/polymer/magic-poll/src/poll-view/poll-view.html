@@ -1,0 +1,109 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+
+<dom-module id="poll-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <iron-ajax id="request-save"
+                   method="post"
+                   content-type="application/json"
+                   url="https://poll-api-rest.herokuapp.com/vote/",
+                   body=''
+                   handle-as="json"
+                   loading="{{cargando}}"
+                   last-response="{{polls}}"></iron-ajax>
+        <h2>Encuesta: [[poll.question]]</h2>
+        <div hidden$="[[!cargando]]">Estamos cargando datos...</div>
+        <google-chart
+                id="graph"
+                type='pie'
+                options='{"title": "Distribución de votos"}'
+                cols='[{"label":"Opción", "type":"string"}, {"label":"Votos", "type":"number"}]'
+                rows='[]'>
+        </google-chart>
+
+        <div>
+            <ul>
+                <dom-repeat items="[[poll.options]]">
+                    <template>
+                        <li>[[item.option]] : [[item.votes]] - <paper-button id="vote-id-[[index]]" on-click="vote">Votar</paper-button></li>
+                    </template>
+                </dom-repeat>
+            </ul>
+        </div>
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class PollView extends Polymer.Element {
+            static get is() { return 'poll-view'; }
+            static get properties() {
+                return {
+                    selected: {
+                        type: String,
+                        value: '',
+                        observer: '_pollsChanged'
+                    },
+                    polls: {
+                        type: Object,
+                        value: [],
+                        observer: '_pollsChanged'
+                    },
+                    poll:{
+                        type: Object,
+                        value: {}
+                    }
+                };
+            }
+
+            _pollsChanged(){
+                if(this.polls.length > this._getIndexSelected()) {
+                    this.poll = {
+                        'id': this.polls[this._getIndexSelected()].id,
+                        'question': this.polls[this._getIndexSelected()].question,
+                        'options': this.polls[this._getIndexSelected()].options
+                    };
+                    const infoChart = [];
+                    for(const option of this.poll.options){
+                        infoChart.push([option.option, option.votes]);
+                    }
+                    this.$.graph.rows = infoChart;
+
+                }else{
+                    this.poll = {
+                        'question': 'opción invalida'
+                    };
+                }
+            }
+
+            _getIndexSelected(){
+                if(this.selected.toString().startsWith('/')){
+                    return Number.parseInt(this.selected.toString().substring(1));
+                }
+                return Number.parseInt(this.selected.toString());
+            }
+
+            vote(event){
+                const indexVote = event.target.id.toString().replace('vote-id-', '');
+                // this.$['request-save'].url =  `https://poll-api-rest.herokuapp.com/vote/${this.poll.id}/${indexVote}`;
+                this.$['request-save'].body = JSON.stringify({
+                    pollId: this.poll.id,
+                    option: indexVote
+                });
+                this.$['request-save'].generateRequest();
+            }
+        }
+
+        window.customElements.define(PollView.is, PollView);
+    </script>
+</dom-module>

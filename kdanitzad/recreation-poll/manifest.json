@@ -1,0 +1,7 @@
+{
+  "name": "recreation-poll",
+  "short_name": "recreation-poll",
+  "description": "recreando pollapp",
+  "start_url": "/",
+  "display": "standalone"
+}
