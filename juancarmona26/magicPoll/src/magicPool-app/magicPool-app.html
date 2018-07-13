@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../views/home-view.html">
+<link rel="import" href="../views/show-results-view.html">
+
+
+
+<dom-module id="magic-pool-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <a href="home">HOME</a>
+    <a href="show">SHOW RESULTS</a>
+    
+    <app-location route="{{route}}"></app-location>
+
+    <app-route   route="{{route}}"
+                    pattern="/:page"
+                    data="{{data}}"> </app-route>
+    
+    <iron-pages 
+          selected="{{data.page}}"
+          attr-for-selected="view"
+          fallback-selection="home"
+          role="main">
+          <home-view view="home" on-new-poll='createPoll'></home-view>
+          <show-results-view view="show" response=[[pollsRq]] on-vote-poll="vote"></show-results-view>          
+        </iron-pages>
+
+        <iron-ajax  id="requestapi"                              
+                    handle-as="json"
+                    content-type="application/json"
+                    on-response="handleResponse"
+                    debounce-duration="300">
+      </iron-ajax>
+        
+
+
+  </template>
+
+  
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MagicPoolApp extends Polymer.Element {
+      static get is() { return 'magic-pool-app'; }
+      static get properties() {
+        return {        
+          pollsRq: {
+              type:Array,
+              value: []                
+          }
+
+        };
+      }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this.getPollsList();
+        }
+
+       createPoll(event) {
+          this.$.requestapi.url = 'https://poll-api-rest.herokuapp.com/poll';
+          this.$.requestapi.method = 'POST';
+          this.$.requestapi.body = JSON.stringify(event.detail);
+          this.$.requestapi.generateRequest();
+        }
+
+        getPollsList() {
+          this.$.requestapi.url = 'https://poll-api-rest.herokuapp.com/polls';
+          this.$.requestapi.method = 'GET';
+          this.$.requestapi.generateRequest();
+        }
+
+        vote(event) {
+          this.$.requestapi.url = 'https://poll-api-rest.herokuapp.com/vote/';
+          this.$.requestapi.method = 'POST';
+          this.$.requestapi.body = JSON.stringify(event.detail);
+          this.$.requestapi.generateRequest();
+        }
+
+        handleResponse() {
+          this.set('pollsRq', this.$.requestapi.lastResponse);
+        }
+    }
+
+    window.customElements.define(MagicPoolApp.is, MagicPoolApp);
+  </script>
+</dom-module>

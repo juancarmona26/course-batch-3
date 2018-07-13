@@ -5,7 +5,7 @@
           display: block;
         }
         
-        paper-button.blue {
+        paper-button.green {
                 background-color: var(--paper-green-500);
                 color: white;
             }
@@ -13,19 +13,17 @@
   
   <h2>Hello Listo [[name]]!</h2>
   <ul>
-      <template is="dom-repeat" items="[[polls]]" as="poll" index-as="indexA">
-          <paper-input id$="input-[[indexA]]"
-          label="Introduce tu nombre"
-          value="{{poll.question}}">
-          </paper-input>
+      <template is="dom-repeat" items="[[response]]" as="poll" index-as="indexA">
+           <h3>[[indexA]].-  {{poll.question}}</h3>
+          
+          
+          
           <template is="dom-repeat" items="[[poll.options]]" as="optionObj" index-as="indexB">          
             <li>
 
-                <p>{{optionObj.option}}  <paper-button class="green" on-click="callbackButton">    Vote! {{optionObj.vote}}</paper-button> </p>
+                <p>{{optionObj.option}}  <paper-button class="green" on-click="callbackButtonVote">   Vote! {{optionObj.votes}}</paper-button> </p>
 
-            </li>
-
-            
+            </li>            
 
             
           </template>
@@ -46,30 +44,24 @@
                 type: String,
                 value: 'World'
               },
-              polls: {
+              response: {
                 type:Array,
-                value:[{
-                  question:'question to do',
-                  options:[{option:'option to choose', vote:0},
-                  {option:'option to choose 2', vote:1}]
-                }]                
+                value:[]                
               }
           
           }
         }
   
-        addQuestion(event) {
-            console.log("agregar question");
-            
-            this.shadowRoot.appendChild(document.createElement('paper-input'));
-        }
-  
-       
-        handleResponse(response){
-          console.log(response);
-  
-        }
-  
+        callbackButtonVote(event) {
+          this.dispatchEvent(new CustomEvent('vote-poll', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              pollId: event.model.parentModel.poll.id,
+              option: event.model.indexB
+            }
+          }));
+        }  
       }
   
       window.customElements.define(ShowResultsView.is, ShowResultsView);
