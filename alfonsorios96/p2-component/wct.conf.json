@@ -1,0 +1,33 @@
+{
+  "verbose": true,
+  "plugins": {
+    "local": {
+      "browsers": [
+        "chrome"
+      ]
+    },
+    "istanbul": {
+      "dir": "coverage",
+      "reporters": [
+        "text-summary",
+        "lcov"
+      ],
+      "include": [
+        "**/p2-component.html"
+      ],
+      "exclude": [
+        "**/bower_components/**/*",
+        "**/node_modules/**/*",
+        "**/test/*.html"
+      ],
+      "thresholds": {
+        "global": {
+          "statements": 80,
+          "branches": 80,
+          "lines": 80,
+          "functions": 80
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
@@ -13,18 +13,48 @@
     <link rel="import" href="../p2-component.html">
 
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
     </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic p2-component demo</h3>
-      <demo-snippet>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3 id="title"></h3>
+    <demo-snippet>
         <template>
-          <p2-component></p2-component>
+            <p2-component></p2-component>
+            <script>
+              const element = document.querySelector('p2-component');
+              element.addEventListener('eventito', event => {
+                document.querySelector('#title').innerText = `Hello ${event.detail}`;
+              });
+              element.myArray = [ {
+                name: 'Juan de Dios',
+                last: 'Carmona'
+              },
+                {
+                  name: 'Emanuel',
+                  last: 'Díaz'
+                },
+                {
+                  name: 'Karla',
+                  last: 'Durán'
+                },
+                {
+                  name: 'Chris',
+                  last: 'García'
+                },
+                {
+                  name: 'Alfonso',
+                  last: 'Ríos'
+                },
+                {
+                  name: 'Salvador',
+                  last: 'Lavariega'
+                } ];
+            </script>
         </template>
-      </demo-snippet>
-    </div>
-  </body>
+    </demo-snippet>
+</div>
+</body>
 </html>

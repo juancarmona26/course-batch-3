@@ -55,27 +55,27 @@
 
         _addOption(){
             const option = this.$.masterOption.value;
-            this.allOptions.push({option: option, vote: 0});
+            this.allOptions.push({option: option, votes: 0});
             const li = document.createElement('li');
             li.textContent = option;
             this.$.myOptionsList.appendChild(li);
+            this.$.masterOption.value = '';
         }
 
         _saveQuestion(){
             this.poll.question = this.$.questionValue.value;
             this.poll.options = this.allOptions;
-            console.log(this.poll);
-
 
             this.dispatchEvent(new CustomEvent('save-question',{
               bubbles: true,
               composed: true,
               detail: this.poll
-            }))
+            }));
+
+            this.$.questionValue.value = '';
+            this.$.myOptionsList.innerHTML ='';
         }
-
-
-
+          
       }
 
       window.customElements.define(HomeView.is, HomeView);

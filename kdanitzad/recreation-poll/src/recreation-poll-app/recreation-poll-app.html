@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+
 
 <dom-module id="recreation-poll-app">
     <template>
@@ -29,13 +31,13 @@
                 fallback-selection="home"
                 role="main">
             <home-view view="home" on-save-question="pullQuestion"></home-view>
-            <poll-view view="poll" data="[[poll]]" on-voting-poll="voteOption"></poll-view>
+            <poll-view view="poll" data="[[questions]]" on-voting-poll="voteOption"></poll-view>
         </iron-pages>
 
 
         <iron-ajax
                 id="myAjax"
-                headers='{"Content-type":"application/json"}'
+                headers='{"Content-Type": "application/json"}'
                 handle-as="json"
                 on-response="responseManagement">
         </iron-ajax>
@@ -55,35 +57,47 @@
 
         static get properties() {
           return {
-            poll: {
-              type: Object,
-              value: {}
+            questions: {
+              type: Array,
+              value: []
             }
           };
         }
 
+        connectedCallback() {
+            super.connectedCallback();
+            this.getQuestions();
+        }
+
+
         pullQuestion(event) {
-          this.$.myAjax.url = 'http://localhost:5000/poll';
+            const endpoint = 'https://poll-api-rest.herokuapp.com/poll';
+            const local = 'http://localhost:5000/poll';
+          this.$.myAjax.url = endpoint;
           this.$.myAjax.method = 'POST';
           this.$.myAjax.body = JSON.stringify(event.detail);
           this.$.myAjax.generateRequest();
         }
 
         voteOption(event) {
-          this.$.myAjax.url = 'http://localhost:5000/vote';
-          this.$.myAjax.method = 'POST';
-          this.$.myAjax.body = JSON.stringify(event.detail);
-          this.$.myAjax.generateRequest();
+            const endpoint = 'https://poll-api-rest.herokuapp.com/vote';
+            const local = 'http://localhost:5000/vote';
+            this.$.myAjax.url = endpoint;
+            this.$.myAjax.method = 'POST';
+            this.$.myAjax.body = JSON.stringify(event.detail);
+            this.$.myAjax.generateRequest();
         }
 
         getQuestions() {
-          this.$.myAjax.url = 'http://localhost:5000/polls';
+            const endpoint = 'https://poll-api-rest.herokuapp.com/polls';
+            const local = 'http://localhost:5000/polls';
+          this.$.myAjax.url = endpoint;
           this.$.myAjax.method = 'GET';
           this.$.myAjax.generateRequest();
         }
 
         responseManagement() {
-          this.poll = this.$.myAjax.lastResponse;
+          this.set('questions',this.$.myAjax.lastResponse);
         }
       }
 

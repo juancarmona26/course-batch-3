@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>magic-tabs-app test</title>
+
+    <script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../src/magic-tabs-app/magic-tabs-app.html">
+</head>
+<body>
+
+<test-fixture id="TestNumberAttributeThatZero">
+    <template>
+        <magic-tabs num="0"></magic-tabs>
+    </template>
+</test-fixture>
+
+<test-fixture id="TestNumberAttribute1">
+    <template>
+        <magic-tabs num="1"></magic-tabs>
+    </template>
+</test-fixture>
+
+<test-fixture id="TestDataAttributeWithOneElement">
+    <template>
+        <magic-tabs data='[{"tab": "Pestaña 1", "content": "<h3>Pestaña 1</h3><p>Contenido de la pestaña 1</p>"}]'></magic-tabs>
+    </template>
+</test-fixture>
+
+<script>
+    suite('magic-tabs', function() {
+
+        test('instantiating the element with attribute number that 0', function() {
+            const dummy = 0;
+            const element = fixture('TestNumberAttributeThatZero');
+            assert.equal(element.num, dummy);
+            const elementShadowRoot = element.shadowRoot;
+            const elementsPaperTab = elementShadowRoot.querySelectorAll('paper-tab');
+            assert.equal(elementsPaperTab.length, dummy);
+        });
+
+        test('instantiating the element with attribute number that 0 and change value', function() {
+            const dummy = 2;
+            const element = fixture('TestNumberAttributeThatZero');
+            element.num = 2;
+            assert.equal(element.num, dummy);
+            const elementShadowRoot = element.shadowRoot;
+            const elementsPaperTab = elementShadowRoot.querySelectorAll('paper-tab');
+            assert.equal(elementsPaperTab.length, dummy);
+        });
+
+        test('instantiating the element with attribute number that 1', function() {
+            const dummy = 1;
+            const element = fixture('TestNumberAttribute1');
+            assert.equal(element.num, dummy);
+            const elementShadowRoot = element.shadowRoot;
+            const elementPaperTabs = elementShadowRoot.querySelectorAll('paper-tabs');
+            assert.equal(elementPaperTabs.length, dummy);
+            const elementsPaperTab = elementShadowRoot.querySelectorAll('paper-tab');
+            assert.equal(elementPaperTabs.length, dummy);
+            assert.strictEqual(elementsPaperTab[0].innerText, 'TAB 1');
+        });
+
+        test('instantiating the element with data attribute with one element', function() {
+            const dummy = 1;
+            const element = fixture('TestDataAttributeWithOneElement');
+            assert.equal(element.data.length, dummy);
+            const elementShadowRoot = element.shadowRoot;
+            const elementPaperTabs = elementShadowRoot.querySelectorAll('paper-tabs');
+            assert.equal(elementPaperTabs.length, dummy);
+            const elementsPaperTab = elementShadowRoot.querySelectorAll('paper-tab');
+            assert.equal(elementPaperTabs.length, dummy);
+            assert.strictEqual(elementsPaperTab[0].innerText, 'PESTAÑA 1');
+            const elementIronPages =  elementShadowRoot.querySelector('iron-pages');
+            const elementsDivsContainers = elementIronPages.querySelectorAll('div');
+            assert.equal(elementsDivsContainers.length, dummy);
+        });
+
+        test('instantiating the element with data attribute with one element and change value', function() {
+            const dummy = 2;
+            const element = fixture('TestDataAttributeWithOneElement');
+            element.data = [{"tab": "CAMBIO 1", "content": "<h3>Pestaña 1</h3><p>Contenido de la pestaña 1</p>"}, {"tab": "CAMBIO 2", "content": "Contenido de la pestaña 2"}];
+            assert.equal(element.data.length, dummy);
+            const elementShadowRoot = element.shadowRoot;
+            const elementsPaperTab = elementShadowRoot.querySelectorAll('paper-tab');
+            assert.strictEqual(elementsPaperTab[0].innerText, 'CAMBIO 1');
+            const elementIronPages =  elementShadowRoot.querySelector('iron-pages');
+            const elementsDivsContainers = elementIronPages.querySelectorAll('div');
+            assert.equal(elementsDivsContainers.length, dummy);
+        });
+    });
+</script>
+
+
+</body>
+</html>

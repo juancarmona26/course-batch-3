@@ -1,5 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer-element.html">
-
+<link rel="import" href="../../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../../bower_components/google-chart/google-chart-loader.html">
+<link rel="import" href="../../../bower_components/google-chart/google-chart-styles.html">
 <dom-module id="poll-view">
     <template>
         <style>
@@ -12,10 +14,19 @@
 
 
         <template is="dom-repeat" items="[[data]]" as="question">
-            <iron-label>[[question.question]]</iron-label>
-            <template is="dom-repeat" items="[[question.options]]" as="option" index-as="i">
-                <paper-button on-click="addVote">[[option.option]]</paper-button>
+
+            <h3>[[question.question]]</h3>
+
+            <template is="dom-repeat" items="[[question.options]]" as="option" index-as="optIndex">
+                <paper-button on-click="addVote">[[option.option]]: </paper-button><iron-label>[[option.votes]]</iron-label>
+
             </template>
+            <google-chart
+                    type='pie'
+                    options='{"title": "Votos al momento"}'
+                    data="[[createChartInfo(question.options)]]"
+            >
+            </google-chart>
         </template>
 
     </template>
@@ -30,23 +41,31 @@
           return 'poll-view';
         }
 
+        createChartInfo(element){
+            const myData = new Array(['Option', 'Votes']);
+            for(const item of element){
+                myData.push([item.option,item.votes]);
+            }
+            console.log(myData);
+            return myData;
+        }
+
         addVote(event) {
           this.dispatchEvent(new CustomEvent('voting-poll', {
             bubbles: true,
             composed: true,
             detail: {
               pollId: event.model.parentModel.question.id,
-              option: event.model.option.i
+              option: event.model.optIndex
             }
-
-          }))
+          }));
         }
 
         static get properties() {
           return {
             data: {
-              type: Object,
-              value: {}
+              type: Array,
+              value: []
             },
             title: {
               type: String,

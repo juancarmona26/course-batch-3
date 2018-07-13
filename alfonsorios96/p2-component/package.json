@@ -1,0 +1,26 @@
+{
+  "name": "p2-component",
+  "version": "0.1.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/wct",
+    "coverage": "open coverage/lcov-report/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfonsorios96/paper-dynamic-forms.git"
+  },
+  "keywords": [
+    "polymer2",
+    "element"
+  ],
+  "author": "@alfonsorios96",
+  "license": "MIT",
+  "devDependencies": {
+    "web-component-tester": "git+https://github.com/t2ym/web-component-tester.git#wct6-plugin",
+    "web-component-tester-istanbul": "git+https://github.com/t2ym/web-component-tester-istanbul.git#0.10.1-wct6.8"
+  }
+}
