@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>p2-component demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module" src="../p2-component.js"></script>
+
+    <h2 id="title"></h2>
+
+    <p2-component></p2-component>
+    <script>
+      const element = document.querySelector('p2-component');
+      element.addEventListener('eventito', event => {
+        document.querySelector('#title').innerText = `Hello ${event.detail}`;
+      });
+      element.myArray = [ {
+        name: 'Juan de Dios',
+        last: 'Carmona'
+      },
+        {
+          name: 'Emanuel',
+          last: 'Díaz'
+        },
+        {
+          name: 'Karla',
+          last: 'Durán'
+        },
+        {
+          name: 'Chris',
+          last: 'García'
+        },
+        {
+          name: 'Alfonso',
+          last: 'Ríos'
+        },
+        {
+          name: 'Salvador',
+          last: 'Lavariega'
+        } ];
+      </script>
+
+</head>
+<body>

@@ -4,8 +4,7 @@
     "element"
   ],
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alfonsorios96/paper-dynamic-forms.git"
+    "type": "git"
   },
   "name": "@polymer/p2-component",
   "version": "",

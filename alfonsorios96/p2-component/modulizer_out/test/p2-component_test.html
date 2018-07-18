@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>p2-component test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../node_modules/sinon-stub-promise/index.js"></script>
+
+    <script type="module" src="../p2-component.js"></script>
+</head>
+<body>
+
+<test-fixture id="BasicTestFixture">
+    <template>
+        <p2-component></p2-component>
+    </template>
+</test-fixture>
+
+<test-fixture id="ChangedPropertyTestFixture">
+    <template>
+        <p2-component my-array='[{
+            "name": "Emanuel",
+        "last": "Díaz"
+        },
+        {
+            "name": "Karla",
+        "last": "D"
+        }]'></p2-component>
+    </template>
+</test-fixture>
+
+<script type="module">
+import '../p2-component.js';
+suite('p2-component', () => {
+
+  test('instantiating the element with default properties works', () => {
+    const element = fixture('BasicTestFixture');
+    assert.deepEqual(element.myArray, []);
+    const elementShadowRoot = element.shadowRoot;
+    const elementList = elementShadowRoot.querySelector('ul');
+    let liList = [];
+    for (const node of elementList.childNodes) {
+      if (node.nodeName === 'li') {
+        liList.push(node);
+      }
+    }
+    assert.equal(liList.length, 0);
+  });
+
+  test('setting a property on the element works', (done) => {
+    // Create a test fixture
+
+    const element = fixture('ChangedPropertyTestFixture');
+    const mock = sinon.mock(element.$.ajaxId).expects('generateRequest');
+    const spy = sinon.spy(element, 'resetField');
+    const fakeFun = () => {
+      return 'HELLO !';
+    };
+    const stub = sinon.stub(element, 'toUppercase', fakeFun);
+    const arrayDummy = [
+      {
+        name: 'Emanuel',
+        last: 'Díaz'
+      },
+      {
+        name: 'Karla',
+        last: 'D'
+      } ];
+    assert.deepEqual(element.myArray, arrayDummy);
+    const user = arrayDummy[ 1 ];
+    const index = arrayDummy.indexOf(user);
+    element.$.a.render();
+    const input = element.shadowRoot.querySelector(`#input-${index}`);
+    input.value = 'Hello !';
+    const button = input.parentNode.querySelector('paper-button');
+    element.addEventListener('eventito', event => {
+      assert.strictEqual(event.detail, 'HELLO !');
+      done();
+    });
+    button.click();
+    assert(mock.once());
+    assert(spy.calledOnce === true);
+    assert.strictEqual('', input.value);
+  });
+
+  test('Promise rejection', function() {
+    const element = fixture('ChangedPropertyTestFixture');
+    const myRejection = {
+      code: 101
+    };
+    const promise = element.myPromise(2);
+    return promise.catch(error => {
+      assert.deepEqual(error, myRejection);
+    });
+  });
+
+  test('Promise resolved', function() {
+    const element = fixture('ChangedPropertyTestFixture');
+    const promise = element.myPromise(1);
+    return promise.then(data => {
+      assert.strictEqual(data, 'success');
+    });
+  });
+
+});
+</script>
+
+</body>
+</html>
