@@ -27,7 +27,7 @@
             }
         </style>
         <paper-tabs selected="0" scrollable>
-            <template is="dom-repeat" items="[[tabs]]">
+            <template is="dom-repeat" items="[[tabs]]" id="repeat">
                 <paper-tab on-click="showContent">{{item.tab}}</paper-tab>
             </template>
         </paper-tabs>
