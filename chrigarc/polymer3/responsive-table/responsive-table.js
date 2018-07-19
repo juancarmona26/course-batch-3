@@ -27,9 +27,7 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
         
         .td, .th {
             border: 1px solid #ddd;            
-            display: table-cell;
-            border: solid;
-            border-width: thin;
+            display: table-cell;                        
             padding-left: 5px;
             padding-right: 5px;
         }
@@ -50,11 +48,16 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
             color: white;            
         }
         
-        .thead{
-            display: table-row;
-            font-weight: bold;
-            text-align: center;
+        #area-collapse .td{
+            width: 100%;
         }
+        
+        .btn-collapse{
+            border: 1px solid #fff;    
+            padding: 10px;
+            background: darkgray;
+        }
+              
       </style>
       
       <div id="responsive-table">
@@ -62,7 +65,7 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
             <dom-repeat items="[[collapseItems]]">
                 <template>
                     <div>
-                        <div><a href="#collapse_[[index]]" on-click="toggle">[[item.title]] &darr;</a></div>        
+                        <div class="btn-collapse"><a href="#collapse_[[index]]" on-click="toggle">[[item.title]] &darr;</a></div>        
                         <iron-collapse id="collapse_[[index]]">                                  
                             <div>
                                 <dom-repeat items="[[item.data]]" as="item2">
@@ -80,7 +83,7 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
         </div>
         <div id="area-table">
             <div class="table">
-                <div class="thead">
+                
                     <div class="tr">
                         <dom-repeat items="[[tableHeaders]]">
                             <template>
@@ -88,8 +91,7 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
                             </template>                                                  
                         </dom-repeat>
                     </div>
-                </div>
-                   <div class="tbody">                   
+                
                     <dom-repeat items="[[tableBody]]">
                         <template>
                             <div class="tr">
@@ -101,7 +103,7 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
                             </div> 
                         </template>                        
                     </dom-repeat>                
-                </div>
+                
             </div>
         </div>
       </div>                
@@ -151,9 +153,9 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
     }
 
     _handleResize() {
-        if(this.offsetWidth < 500 && this.vista !== 1){
+        if(this.clientWidth < 500 && this.vista !== 1){
             this.vista = 1;
-        }else if(this.offsetWidth >= 500 && this.vista !== 2){
+        }else if(this.clientWidth >= 500 && this.vista !== 2){
             this.vista = 2;
         }
     }
@@ -195,17 +197,18 @@ class ResponsiveTable extends mixinBehaviors([IronResizableBehavior], PolymerEle
     }
 
     _vista(){
-        if(this.offsetWidth < 500){
+        if(this.clientWidth < 500){
             return  1;
-        }else if(this.offsetWidth >= 500){
+        }else if(this.clientWidth >= 500){
             return 2;
         }
     }
 
     toggle(event){
-        const index = event.target.getAttribute('href').toString().replace('#collapse_', '');
-        this.$['area-collapse'].querySelector('#collapse_' + index).toggle();
-        event.target.setAttribute('aria-expanded',this.$['area-collapse'].querySelector('#collapse_' + index).opened);
+        const index = event.model.index;
+        const node = this.$['area-collapse'].querySelector('#collapse_' + index);
+        node.toggle();
+        event.target.setAttribute('aria-expanded',node.opened);
     }
 }
 
