@@ -3,7 +3,7 @@ const cacheName = 'weatherPWA-step-6-1';
 const filesToCache =  [
     '/',
     '/index.html',
-    // '/scripts/app.js',/* este como se pone? */
+    '/src/clima-app-app/clima-app-app.js',
     '/src/dom-clima/dom-clima.js',
     '/styles/inline.css',
     '/images/clear.png',
