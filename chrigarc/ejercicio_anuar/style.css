@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary-color: #79716f; /*0 - f*/
+    --secondary-color: #a89996;  /*0 - 255*/
+    --header-height: 80px;
+    --backgroud-element: green;
+}
+
+.header {
+    background-color: var(--secondary-color);
+    height: var(--header-height);
+}
+
+.navbar {
+    align-items: center;
+    display: none;
+    height: 100%;
+    justify-content: space-around;
+    list-style: none;
+    width: 100%;
+}
+
+.navbar__item{
+    color: black;
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-family: fantasy;
+}
+
+.show .navbar{
+    display: block;
+}
+
+.header__side-button {
+    display: block;
+    cursor: pointer;
+    font-size: 50px;
+    margin: 0 0 0 auto;
+}
+
+.sidenav {
+    background-color: gray;
+    box-sizing: border-box;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    transition: right .4s;
+}
+
+.show {
+    right: 0;
+}
+
+.sidenav__side-button {
+    font-size: 50px;
+}
+
+
+.banner {
+    background-color: var(--primary-color);
+    height: calc(10vh - var(--header-height));
+    box-sizing: border-box;
+    padding: 40px;
+    display: flex;
+    color: white;
+}
+
+.content {
+    height: calc(80vh - var(--header-height));
+}
+
+.grid{
+    height: 80%;
+    padding: 20px;
+    display: grid;
+    grid-template-rows: 1fr ;
+    grid-template-columns: 1fr  1fr;
+    grid-gap: 50px;
+}
+
+.grid__element{
+    background: var(--backgroud-element);
+    height: 100%;
+    width: 100%;
+}
+
+.actions{
+    text-align: center;
+}
+
+.actions__link{
+    background: var(--backgroud-element);
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+}
+
+@media screen and (min-width: 1024px){
+
+    .banner{
+        background: url('https://images.pexels.com/photos/274609/pexels-photo-274609.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260');
+        height: calc(30vh - var(--header-height));
+    }
+
+    .navbar{
+        display: flex;
+        align-content: center;
+        box-sizing: border-box;
+    }
+
+    .navbar__item{
+        display: inline;
+        padding: 20px;
+        color: white;
+    }
+
+    .header__side-button{
+        display: none;
+    }
+
+
+    .grid{
+        height: 80%;
+        padding: 20px;
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 50px;
+    }
+
+    .grid__quote{
+        grid-column: 1/3;
+    }
+
+    .grid__banner{
+        grid-column: 3/5;
+    }
+}
