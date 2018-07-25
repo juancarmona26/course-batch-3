@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 25%);
+            overflow: hidden;
+            font-family: "Arial";
+        }
+
+        .grid>div {
+            border-radius: 4px;
+            border: 1px solid red;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+        }
+
+        .tres {
+            grid-column: span 2;
+        }
+
+        .cuatro {
+            grid-column: span 4;
+            text-align: center;
+        }
+
+        .superHeader {
+            display: flex;
+            justify-content: space-between;
+
+        }
+
+        .superHeader>div {
+            display: flex;
+        }
+
+        .menu>div {
+            margin: auto 24px;
+        }
+
+        .menuMobile {
+            display: none;
+        }
+
+        .xr {
+            text-align: center;
+            margin: 12px;
+        }
+
+        .xr>img {
+            width: 100%;
+        }
+
+        .xr>div:nth-child(2) {
+            color: green;
+        }
+
+        .xr>div:nth-child(3) {
+            color: gray;
+            font-size: .8rem;
+        }
+
+        .er {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .et>div {
+            color: greenyellow;
+        }
+
+        .et>img {
+            float: right;
+            width: 50%;
+        }
+
+        /* Extra Small Devices, Phones */
+
+        @media only screen and (max-width: 480px) {
+
+            .noMobile {
+                display: none;
+            }
+            .crexe {
+                grid-column: span 2;
+            }
+            .superHeader,
+            .superHeader>div {
+                display: block;
+            }
+
+            .menuMobile {
+                display: block;
+                margin: 0 0 0 auto;
+                text-align: right;
+            }
+
+            .menuMobile img {
+                width: 24px;
+                cursor: pointer;
+            }
+
+            .superHeader {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                background-color: lightblue;
+                transition: left .8s;
+                height: 100vh;
+            }
+            .superHeaderMobileShow {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid">
+        <div class="header">
+            <div class="menuMobile"><img src="http://www.stickpng.com/assets/images/588a64f5d06f6719692a2d13.png"></div>
+            <div class="superHeader">
+                <div class="menu">
+                    <div><a href="#">Home</a></div>
+                    <div><a href="#">Shop</a></div>
+                    <div><a href="#">Specials</a></div>
+                    <div><a href="#">Support</a></div>
+                    <div><a href="#">Cycling Club</a></div>
+                </div>
+                <div>
+                    <div>Buscar <input type="text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="crexe">
+            <div class="xr">
+                <img src="https://static.wixstatic.com/media/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg/v1/fill/w_416,h_277,q_85,usm_0.66_1.00_0.01/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg">
+                <div>quia dolor sit amet</div>
+                <div>non numquam eius modi tempora incidunt</div>
+            </div>
+        </div>
+        <div class="crexe">
+            <div class="xr">
+                <img src="https://static.wixstatic.com/media/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg/v1/fill/w_416,h_277,q_85,usm_0.66_1.00_0.01/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg">
+                <div>quia dolor sit amet</div>
+                <div>non numquam eius modi tempora incidunt</div>
+            </div>
+        </div>
+        <div class="noMobile">
+            <div class="xr">
+                <img src="https://static.wixstatic.com/media/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg/v1/fill/w_416,h_277,q_85,usm_0.66_1.00_0.01/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg">
+                <div>quia dolor sit amet</div>
+                <div>non numquam eius modi tempora incidunt</div>
+            </div>
+        </div>
+        <div class="noMobile">
+            <div class="xr">
+                <img src="https://static.wixstatic.com/media/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg/v1/fill/w_416,h_277,q_85,usm_0.66_1.00_0.01/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg">
+                <div>quia dolor sit amet</div>
+                <div>non numquam eius modi tempora incidunt</div>
+            </div>
+        </div>
+        <div class="tres noMobile er">Et harum quidem rerum facilis est et expedita distinctio</div>
+        <div class="tres noMobile et">
+
+            <div> Temporibus autem quibusdam et aut officiis debitis aut rerum </div>
+            <img src="https://static.wixstatic.com/media/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg/v1/fill/w_416,h_277,q_85,usm_0.66_1.00_0.01/15f3d2_5f02bc650dd84ae8a9102b732f66eacc~mv2.jpg"> Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est
+
+        </div>
+        <div class="cuatro"><button type="button">Find your perfect ride</button></div>
+    </div>
+    <script>
+        document.querySelector(".menuMobile").addEventListener("click", function() {
+            document.querySelector(".superHeader").classList.toggle("superHeaderMobileShow");
+        });
+    </script>
+</body>
+
+</html>
