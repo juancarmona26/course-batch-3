@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>redux-polymer</title>
+    <meta name="description" content="redux-polymer description">
+
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <script type="module" src="/src/redux-polymer-app/redux-polymer-app.js"></script>
+</head>
+<body>
+<redux-polymer-app></redux-polymer-app>
+<script>
+  // TODO: Use production redux bundle (either dist or uglified) later.
+  // Will either need to integrate loose-envify into build process or
+  // figure out some other way.
+  window.process = window.process || {};
+  process.env = process.env || {};
+  process.env.NODE_ENV = "development";
+</script>
+</body>
+</html>
