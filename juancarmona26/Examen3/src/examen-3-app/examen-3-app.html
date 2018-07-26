@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../views/home-view.html">
+
+<dom-module id="examen-3-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>        
+    
+    <app-location route="{{route}}"></app-location>
+
+    <app-route   route="{{route}}"
+                    pattern="/:page"
+                    data="{{data}}"> </app-route>
+    
+    <iron-pages 
+          selected="{{data.page}}"
+          attr-for-selected="view"
+          fallback-selection="home"
+          role="main">
+          <home-view view="home" response=[[characters]]></home-view>          
+        </iron-pages>
+
+        <iron-ajax  id="requestapi"                              
+                    handle-as="json"
+                    content-type="application/json"
+                    on-response="handleResponse"
+                    debounce-duration="300">
+      </iron-ajax>
+    <h2>Hello [[prop1]]!</h2>
+    
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class Examen3App extends Polymer.Element {
+      static get is() { return 'examen-3-app'; }
+      static get properties() {
+        return {        
+          characters: {
+              type:Array,
+              value: []                
+          }
+
+        };
+      }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this.getPollsList();
+        }      
+
+        getPollsList() {
+          this.$.requestapi.url = 'https://reqres.in/api/users?per_page=12';
+          this.$.requestapi.method = 'GET';
+          this.$.requestapi.generateRequest();
+        }
+       
+        handleResponse() {
+          this.set('characters', this.$.requestapi.lastResponse.data);
+        }
+    }
+
+    window.customElements.define(Examen3App.is, Examen3App);
+  </script>
+</dom-module>

@@ -1,0 +1,15 @@
+{
+  "name": "examen-3",
+  "description": "Examen 3 del curso de Web movile specialist",
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.1.1",
+    "app-route": "PolymerElements/app-route#^2.1.2",
+    "iron-ajax": "PolymerElements/iron-ajax#^2.1.3"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  }
+}

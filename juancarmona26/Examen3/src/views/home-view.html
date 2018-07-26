@@ -1,0 +1,65 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+
+
+<dom-module id="home-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-button.green {
+          background-color: var(--paper-green-500);
+          color: white;
+      }
+    </style>    
+
+    <ul>
+    <template is="dom-repeat" items="[[response]]" as="character" index-as="indexA">
+        
+        <div><img src="{{character.avatar}}" alt="Character">  </div>
+            
+            <li>
+
+                <p>{{character.id}} </p>
+                <p>{{character.first_name}} </p>
+                <p>{{character.last_name}} </p>
+
+            </li>            
+
+     
+   </template>
+</ul>
+
+  
+
+  </template>  
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class HomeView extends Polymer.Element {      
+      
+      static get is() { return 'home-view'; }
+      static get properties() {
+        return {
+            name: {
+              type: String,
+              value: 'World'
+            },
+            response: {
+              type:Array,
+              value:[]                
+            }
+        
+        }
+      }      
+
+    }
+
+    window.customElements.define(HomeView.is, HomeView);
+  </script>
+</dom-module>
