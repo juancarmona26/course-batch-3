@@ -9,41 +9,65 @@
     <script src="../../../webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../../src/polymer-application/polymer-application.html">
+    <link rel="import" href="../../src/one-component/one-component.html">
   </head>
   <body>
 
     <test-fixture id="BasicTestFixture">
       <template>
-        <polymer-application></polymer-application>
+        <one-component></one-component>
       </template>
     </test-fixture>
 
     <test-fixture id="ChangedPropertyTestFixture">
       <template>
-        <polymer-application prop1="new-prop1"></polymer-application>
+        <one-component tabs='[{"tab": "1", "content": "<h3>Title</h3><br><p>lorem ipsum</p>"},
+                            {"tab": "2", "content": "<h4>Title</h4><br><p>lorem lore</p>"},
+                            {"tab": "3", "content": "<h5>Title</h5><br><p>lorem lora</p>"},
+                            {"tab": "4", "content": "<h3>Title</h3><br><p>alex ipsum</p>"}]'></one-component>
       </template>
     </test-fixture>
 
     <script>
-      suite('polymer-application', function() {
+      suite('polymer-application', ()=> {
 
-        test('instantiating the element with default properties works', function() {
-          var element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'polymer-application');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello polymer-application!');
+        test('instantiating the element with default properties works', ()=> {
+          const element = fixture('BasicTestFixture');
+          assert.deepEqual(element.tabs, undefined);
         });
 
-        test('setting a property on the element works', function() {
+        test('showing right tabs', ()=> {
           // Create a test fixture
-          var element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          var elementShadowRoot = element.shadowRoot;
-          var elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+          const element = fixture('ChangedPropertyTestFixture');
+            assert.deepEqual(element.tabs.length, 4);
+          const elementShadowRoot = element.shadowRoot;
+          const elementPaperTabs = elementShadowRoot.querySelector('paper-tabs');
+          element.$.repeat.render();
+          const values = ['1','2','3','4'];
+          let indexValues = 0;
+            for(const child of elementPaperTabs.children){
+                if(child.nodeName === 'paper-tabs') {
+                    assert.strictEqual(values[0], child.innerText);
+                    indexValues++;
+                }
+            }
         });
+
+          test('showing right content', (done)=> {
+              // Create a test fixture
+              const element = fixture('ChangedPropertyTestFixture');
+              assert.deepEqual(element.tabs.length, 4);
+              const elementShadowRoot = element.shadowRoot;
+              const elementPaperTabs = elementShadowRoot.querySelector('paper-tabs');
+              const elementContainer = elementShadowRoot.querySelector('#container');
+              element.$.repeat.render();
+              const contentMock = "<h5>Title</h5><br><p>lorem lora<\/p>";
+              element.addEventListener('click', event => {
+                  assert.strictEqual(elementContainer.innerHTML, contentMock);
+                  done();
+              });
+              elementPaperTabs.children[2].click();
+          });
 
       });
     </script>

@@ -1,0 +1,6 @@
+{
+  "name": "redux-polymer",
+  "short_name": "redux-polymer",
+  "start_url": "/",
+  "display": "standalone"
+}
