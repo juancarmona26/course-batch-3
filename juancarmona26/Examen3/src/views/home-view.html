@@ -1,23 +1,18 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-
+<link rel="stylesheet" href="../css/styles.css">
 
 
 <dom-module id="home-view">
+  
   <template>
-    <style>
-      :host {
-        display: block;
-      }
-
-      paper-button.green {
-          background-color: var(--paper-green-500);
-          color: white;
-      }
-    </style>    
-
-    <ul>
+      <section class="box-model">
+          <h2 class="section__title">Showing Characters</h2>
+    <ul class="grid">
     <template is="dom-repeat" items="[[response]]" as="character" index-as="indexA">
         
+      <article class="" >
+       
+        <div class="grid-item">
         <div><img src="{{character.avatar}}" alt="Character">  </div>
             
             <li>
@@ -27,8 +22,11 @@
                 <p>{{character.last_name}} </p>
 
             </li>            
+          </div>
+        
+      </article>
 
-     
+    </section>
    </template>
 </ul>
 
