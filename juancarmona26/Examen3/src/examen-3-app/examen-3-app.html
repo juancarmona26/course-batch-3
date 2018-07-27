@@ -56,10 +56,10 @@
 
         connectedCallback() {
           super.connectedCallback();
-          this.getPollsList();
+          this.getCharacterList();
         }      
 
-        getPollsList() {
+        getCharacterList() {
           this.$.requestapi.url = 'https://reqres.in/api/users?per_page=12';
           this.$.requestapi.method = 'GET';
           this.$.requestapi.generateRequest();
