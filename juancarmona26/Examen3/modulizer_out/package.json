@@ -10,10 +10,12 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0",
-    "@polymer/iron-pages": "^3.0.0-pre.18",
     "@polymer/app-route": "^3.0.0-pre.18",
-    "@polymer/iron-ajax": "^3.0.0-pre.18"
+    "@polymer/iron-ajax": "^3.0.0-pre.18",
+    "@polymer/iron-pages": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.21",
+    "@polymer/paper-input": "^3.0.0-pre.21",
+    "@polymer/polymer": "^3.0.0"
   },
   "devDependencies": {
     "wct-browser-legacy": "^1.0.1",
