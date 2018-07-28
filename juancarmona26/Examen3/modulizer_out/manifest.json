@@ -1,0 +1,7 @@
+{
+  "name": "examen-3",
+  "short_name": "examen-3",
+  "description": "Examen 3 del curso de Web movile specialist",
+  "start_url": "/",
+  "display": "standalone"
+}

@@ -1,5 +1,5 @@
-import { PolymerElement } from '../../../../@polymer/polymer/polymer-element.js';
-import { html } from '../../../../@polymer/polymer/lib/utils/html-tag.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 /**
  * @customElement
  * @polymer
@@ -18,9 +18,13 @@ class HomeView extends PolymerElement {
       }
     </style>    
 
-    <ul>
-    <template is="dom-repeat" items="[[response]]" as="character" index-as="indexA">
-        
+    <section class="box-model">
+    <h2 class="section__title">Showing Characters</h2>
+  <ul class="grid">
+    
+    <template is="dom-repeat" items="[[response]]" as="character" index-as="indexA" >
+    <article class="" >
+      <div class="grid-item">
         <div><img src="{{character.avatar}}" alt="Character">  </div>
             
             <li>
@@ -29,11 +33,14 @@ class HomeView extends PolymerElement {
                 <p>{{character.first_name}} </p>
                 <p>{{character.last_name}} </p>
 
-            </li>            
+            </li>  
+            </div>          
 
-     
+            </article>
    </template>
+   </section>
 </ul>
+<p>Hola mundo XD<p/>
 `;
   }
 
